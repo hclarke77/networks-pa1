@@ -29,10 +29,6 @@ if CSPlist[0] == "s":
 
                     mpStart = connectionSocket.recv(1024).decode()
 
-                    start = time.time()
-
-                    rttList = list()
-
                     if mpStart[0] == "m":
 
                         for p in range(1,int(CSPlist[3])+1):
@@ -40,32 +36,12 @@ if CSPlist[0] == "s":
                             if p == 1:
 
                                 connectionSocket.send(mpStart.encode())
-
-                                rtt = time.time() - start
-
-                                rttList.append(rtt)
-
+                                
                             else:
-
-                                start = time.time() 
 
                                 MPmessage = connectionSocket.recv(1024).decode()
                                 connectionSocket.send(MPmessage.encode())
-
-                                rtt = time.time() - start
-
-                                rttList.append(rtt)
-
-                            total = 0
-                            for result in rttList:
-
-                                total+=result
-
-                            avgRTT = total/int(CSPlist[3])
-
-                            print("Average RTT: ", avgRTT)
-
-                                
+                               
                             CTPmessage = connectionSocket.recv(1024).decode()
 
                             if CTPmessage[0] == "t":
@@ -131,7 +107,7 @@ if CSPlist[0] == "s":
 
                             avgRTT = total/int(CSPlist[3])
 
-                            print("Average RTT: ", avgRTT)
+                            print("Average Throughput: ", int(CSPlist[2])/avgRTT)
 
                                 
                             CTPmessage = connectionSocket.recv(1024).decode()
