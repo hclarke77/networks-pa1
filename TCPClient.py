@@ -1,5 +1,5 @@
 import sys
-
+import time
 from socket import *
 
 serverName = gethostbyname(sys.argv[1])
@@ -19,15 +19,22 @@ CSPmessage = "s " + CSPtype + " " + str(CSPmsize) + " " + str(CSPprobes) + " " +
 clientSocket.send(CSPmessage.encode())
 recvMessage = clientSocket.recv(1024)
 print(recvMessage.decode())
-
 MPpayload = int(CSPmsize)*"a"
+RTTlist = []                            
+
 for p in range(1,int(CSPprobes)+1):
-    MPmessage = "m " + MPpayload + " " + str(p) + "\n"   
+    MPmessage = "m " + MPpayload + " " + str(p) + "\n"
+    start = time.time()
     clientSocket.send(MPmessage.encode())
     echoMessage = clientSocket.recv(1024).decode()
-
+    end = time.time() - start
+    RTTlist.append(end)
     print(echoMessage)
 
+total = 0
+for result in RTTlist:
+    total += result
+print("average Throughput: ", total/int(CSPprobes))
 CTPmessage = "t" + "\n"
 clientSocket.send(CTPmessage.encode())
 termMessage = clientSocket.recv(1024).decode()
